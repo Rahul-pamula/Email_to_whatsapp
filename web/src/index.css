@@ -207,3 +207,63 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.05rem;
   line-height: 1.6;
 }
+
+/* Responsive Grids */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-canvas {
+  height: 600px;
+}
+
+.doc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  text-align: left;
+}
+
+/* Mobile Media Queries */
+@media (max-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-canvas {
+    height: 400px;
+  }
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .doc-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .doc-grid .bento-box {
+    text-align: center;
+  }
+  .doc-grid .bento-box > div {
+    margin: 0 auto 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 2.8rem !important; }
+  h2 { font-size: 2.2rem !important; }
+  .container {
+    padding: 0 16px;
+  }
+  .signature-logo {
+    font-size: 2rem;
+  }
+}

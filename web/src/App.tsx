@@ -18,9 +18,9 @@ function App() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '80px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'center', width: '100%' }}>
-          <div>
+      <section className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '100px' }}>
+        <div className="hero-grid">
+          <div className="hero-text">
             <div style={{ display: 'inline-block', padding: '6px 12px', background: 'var(--primary-glow)', color: 'var(--primary-supa)', borderRadius: '20px', fontWeight: 600, fontSize: '0.85rem', marginBottom: '16px' }}>
               Open Source & Self-Hosted
             </div>
@@ -37,7 +37,7 @@ function App() {
               </button>
             </div>
           </div>
-          <div style={{ height: '600px', background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%)', borderRadius: '50%' }}>
+          <div className="hero-canvas" style={{ background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%)', borderRadius: '50%' }}>
             <Hero3D />
           </div>
         </div>
@@ -88,7 +88,7 @@ function App() {
             You do not need to use GitHub or the terminal. Our secure browser script uses the official Supabase Management API to provision your backend automatically.
           </p>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px', textAlign: 'left' }}>
+          <div className="doc-grid">
             <div className="bento-box" style={{ padding: '32px' }}>
               <div style={{ background: 'var(--bg-base)', width: 48, height: 48, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
                 <Database size={24} color="var(--primary-supa)" />
