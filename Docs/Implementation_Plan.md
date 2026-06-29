@@ -1,49 +1,71 @@
-# Implementation Plan: Email Summary to Telegram Notification System
+# Detailed Implementation Plan: Email to Telegram Bot
 
-**Goal:** Build a fully serverless, zero-cost email summarization system using Supabase Edge Functions, Groq API, and Telegram. 
+This document breaks down the entire project into 7 actionable phases. We will complete these phases sequentially to build the fully serverless, zero-cost email summarization system.
 
-## Timeline Feasibility
-**Can we do this in 1 week using Antigravity?** 
-**Yes, absolutely.** In fact, because the architecture is serverless and well-documented, we can likely build the core functional prototype in just **1 to 2 days**. The remaining time in the week can be used for testing, refining the AI prompts, and adding polish.
+---
 
-## User Action Required Before Coding
+## Phase 1: Environment & Scaffolding
+**Goal:** Set up the local development environment and project structure.
+1. [x] Create `.env.example` file.
+2. [x] Create `.gitignore` to protect secrets.
+3. [ ] Install the Supabase CLI via Homebrew (`brew install supabase/tap/supabase`).
+4. [ ] Run `supabase init` to scaffold the serverless edge functions architecture.
+5. [ ] User fills out their local `.env` file with Telegram, Groq, and Supabase keys.
 
-> [!IMPORTANT]
-> **Prerequisites for you:** Before I can deploy the code, you will need to do a few quick setup steps on your end:
-> 1. Create a free account at [Supabase.com](https://supabase.com) and create a new project.
-> 2. Get a free API key from [Groq](https://console.groq.com).
-> 3. Create a Telegram Bot using `@BotFather` and get the Bot Token.
+---
 
-## Proposed Coding Steps
+## Phase 2: Database Setup & Security
+**Goal:** Create the PostgreSQL schema and configure credential encryption.
+1. [ ] Generate a new database migration: `supabase migration new initial_schema`.
+2. [ ] Write SQL to create the `users` and `email_accounts` tables.
+3. [ ] Write SQL to create the `blocklist`, `vip_list`, and `processed_emails` tables.
+4. [ ] Enable the `pg_crypto` extension and configure **Supabase Vault** to ensure the user's App Passwords are encrypted at rest.
+5. [ ] Run `supabase start` to apply migrations locally.
 
-We will scaffold the project locally using the Supabase CLI. 
+---
 
-### 1. Database Layer
-**File:** `supabase/migrations/20260629_initial_schema.sql`
-I will write the SQL migration script containing the exact tables we designed in the Architecture document (Users, Email Accounts, Blocklists, Processed Emails) and enable Supabase Vault for credential encryption.
+## Phase 3: Edge Function Skeleton
+**Goal:** Create the serverless backend that listens to Telegram and Cron jobs.
+1. [ ] Create a new edge function: `supabase functions new email-bot`.
+2. [ ] Configure `deno.json` to import standard libraries (Supabase JS, HTTP routing).
+3. [ ] Build the **Dual-Router** in `index.ts`:
+   - *Route A:* Listen for standard HTTP POST requests (Telegram Webhooks).
+   - *Route B:* Listen for Cron scheduling triggers.
 
-### 2. Edge Function Layer (TypeScript/Deno)
-**File:** `supabase/functions/email-bot/index.ts`
-This will be the main entry point for our Serverless function. It will act as a dual-router:
-1. **Webhook Handler:** Listens for instant HTTP POST requests from Telegram (e.g., when you type `/block` or `/add_email`).
-2. **Cron Handler:** Listens for the 5-minute scheduled trigger to check emails.
+---
 
-**File:** `supabase/functions/email-bot/imapClient.ts`
-Handles connecting to `imap.gmail.com`, authenticating with the decrypted App Password, and extracting only the `BODY.PEEK[TEXT]` of unread emails.
+## Phase 4: Secure IMAP Integration
+**Goal:** Connect to the user's inbox securely without downloading heavy attachments.
+1. [ ] Create `imapClient.ts`.
+2. [ ] Implement logic to query the Supabase database and decrypt the user's App Password from the Vault.
+3. [ ] Connect to `imap.gmail.com` over SSL.
+4. [ ] Search for `UNSEEN` emails (Limit: 5 at a time).
+5. [ ] Use `BODY.PEEK[TEXT]` to extract *only* the text body, avoiding the 50MB Edge Function memory limit.
 
-**File:** `supabase/functions/email-bot/aiService.ts`
-Handles the REST API call to Groq (Llama 3 8B), passing the email text and our strict prompt to classify Importance and generate the 3-bullet summary.
+---
 
-**File:** `supabase/functions/email-bot/telegram.ts`
-Handles sending messages back to your phone, including the interactive Inline Buttons (Snooze, Block, etc.).
+## Phase 5: Groq AI Summarization
+**Goal:** Analyze the text instantly using free Llama 3 models.
+1. [ ] Create `aiService.ts`.
+2. [ ] Write the strict system prompt instructing the AI to classify as `IMPORTANT` or `ROUTINE`.
+3. [ ] Connect to the Groq API endpoint.
+4. [ ] If the AI returns `IMPORTANT`, parse the 3-bullet summary. If `ROUTINE`, signal the script to skip the email.
 
-## Verification Plan
+---
 
-### Automated/Local Testing
-- We will use `supabase start` and `supabase functions serve` to run the database and Edge Function locally on your Mac.
-- I will simulate a Telegram Webhook payload to ensure the function responds correctly to commands like `/start`.
+## Phase 6: Telegram UI & Bot Logic
+**Goal:** Build the interactive chat interface for the user.
+1. [ ] Create `telegram.ts`.
+2. [ ] Implement Onboarding: Handle the `/add_email` command to securely ask the user for their App Password and save it to the DB.
+3. [ ] Implement Preferences: Handle the `/block` and `/vip` commands to update the SQLite/Supabase tables.
+4. [ ] Implement Output: Send the AI-generated summary back to the user, including **Inline Buttons** beneath the message (e.g., `[Translate]`, `[Snooze]`, `[Mark as Read]`).
 
-### Manual Verification
-- You will connect a test email address via the Telegram bot.
-- We will send a test email to that address.
-- We will wait for the cron trigger to fire and verify that you receive the summarized Telegram notification with the correct inline buttons.
+---
+
+## Phase 7: Deployment & Final Wiring
+**Goal:** Push the code to the cloud so it runs 24/7 for free.
+1. [ ] Deploy the edge function to Supabase: `supabase functions deploy email-bot --no-verify-jwt`.
+2. [ ] Push local `.env` secrets to the cloud: `supabase secrets set --env-file .env`.
+3. [ ] Register the Webhook: Use `curl` to tell the Telegram API to send all chat messages to the newly deployed Supabase URL.
+4. [ ] Set up the Cron Trigger: Use `pg_cron` in Supabase to tell the Edge Function to run the IMAP checker every 5 minutes.
+5. [ ] Perform a full End-to-End test with a real unread email.
