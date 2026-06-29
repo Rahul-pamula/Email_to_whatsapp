@@ -50,7 +50,7 @@ function App() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px' }}>
           {/* Feature 1 */}
           <div className="glass-panel feature-card">
-            <img src="/ai_summarization.png" alt="AI Summarization" className="feature-img" />
+            <img src={`${import.meta.env.BASE_URL}ai_summarization.png`} alt="AI Summarization" className="feature-img" />
             <div className="feature-content">
               <h3>Groq Llama-3 AI</h3>
               <p>Every incoming email is parsed and classified by Llama-3 at lightning speed. It intelligently filters out spam and generates a concise summary of only what matters.</p>
@@ -59,7 +59,7 @@ function App() {
 
           {/* Feature 2 */}
           <div className="glass-panel feature-card">
-            <img src="/telegram_delivery.png" alt="Telegram Delivery" className="feature-img" />
+            <img src={`${import.meta.env.BASE_URL}telegram_delivery.png`} alt="Telegram Delivery" className="feature-img" />
             <div className="feature-content">
               <h3>Instant Delivery</h3>
               <p>Summaries are pushed immediately to your private Telegram Bot. You can snooze senders, block spam, or mark VIPs interactively right from the chat interface.</p>
@@ -68,7 +68,7 @@ function App() {
 
           {/* Feature 3 */}
           <div className="glass-panel feature-card">
-            <img src="/zero_trust.png" alt="Zero Trust Architecture" className="feature-img" />
+            <img src={`${import.meta.env.BASE_URL}zero_trust.png`} alt="Zero Trust Architecture" className="feature-img" />
             <div className="feature-content">
               <h3>Zero-Trust Security</h3>
               <p>Bring Your Own Cloud (BYOC). This code runs entirely inside your personal Supabase project. We have absolutely zero access to your emails or API keys.</p>
