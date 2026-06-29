@@ -1,67 +1,73 @@
-# 📧 Email to Telegram AI Summary Bot
+<div align="center">
+  <h1>✉️ Email_To_Telebot</h1>
+  <p><b>Your Personal AI Email Assistant. 100% Private.</b></p>
+  <p>Built with <strong>Supabase</strong>, <strong>Groq Llama-3</strong>, and <strong>React Three Fiber</strong>.</p>
+</div>
 
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-![Deno](https://img.shields.io/badge/Deno-white?style=for-the-badge&logo=deno&logoColor=464647)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
-![Groq](https://img.shields.io/badge/Groq_Llama_3-f55036?style=for-the-badge)
+<br/>
 
-A powerful, serverless bot that monitors your email inbox, uses cutting-edge AI (Groq Llama 3) to instantly classify whether an email is important or routine, and pushes a clean, 3-bullet summary directly to your Telegram.
+## 🚀 Overview
+**Email_To_Telebot** is a completely private, self-hosted AI agent that reads your emails, summarizes the important ones using ultra-fast Llama-3 AI, and delivers them instantly to your Telegram app.
 
-Built entirely on **Supabase Edge Functions** to run 24/7 in the cloud for absolutely **zero cost**.
+Unlike other SaaS products, this operates on a **Zero-Trust Architecture**. We do not host your backend, we cannot read your emails, and we do not store your API keys. The entire backend lives on your personal **Supabase** cloud instance.
 
 ---
 
 ## ✨ Features
-
-- **🧠 Smart AI Filtering:** Automatically ignores newsletters, promotions, and routine emails. Only alerts you when an email actually requires your attention (deadlines, financial, urgent tasks).
-- **📝 Bite-Sized Summaries:** Important emails are instantly summarized into 3 quick bullet points. No more reading long email threads.
-- **🔐 Secure by Design:** Uses IMAP App Passwords encrypted at rest using **Supabase Vault**. Edge functions bypass attachments entirely (`BODY.PEEK[TEXT]`) to respect 50MB memory limits and ensure high performance.
-- **⚙️ Interactive Telegram UI:** Fully functional Telegram bot allowing you to:
-  - `/add_email` to connect multiple inboxes (Gmail supported).
-  - Press inline buttons to `🔕 Block Sender`, `🕒 Snooze`, or `📅 Remind Tomorrow`.
-  - Mark specific senders as `/vip` to bypass AI filtering.
-- **⚡ Serverless Architecture:** Runs entirely on Supabase Edge Functions (Deno) triggered by `pg_cron` (polling) and Telegram Webhooks (instant commands).
+- 🧠 **AI Summarization:** Uses Groq's Llama-3 to rapidly summarize long email threads into concise, readable paragraphs.
+- 📱 **Interactive Telegram Bot:** Get instant push notifications for important emails. Interact with the bot to mute senders, block spam, or edit preferences directly from the chat.
+- 🔒 **Zero-Trust BYOC (Bring Your Own Cloud):** The code runs 100% in your Supabase project. Secrets are encrypted in Supabase Vault.
+- 🎨 **Beautiful Web Deployment Wizard:** A client-side, browser-only React app featuring 3D Three.js graphics that automates the deployment of the backend to your Supabase via the Management API.
 
 ---
 
-## 🛠 Tech Stack
+## 🛠️ How to Deploy (In 60 Seconds)
 
-- **Backend / Hosting:** Supabase (PostgreSQL, Edge Functions, pg_cron, Supabase Vault)
-- **Language:** TypeScript (Deno runtime)
-- **AI / LLM:** Groq API (Llama 3 8B model)
-- **Bot Interface:** Telegram Bot API
-- **Email Protocol:** IMAP (`imapflow` over SSL)
+You do not need to use the terminal to deploy this bot! We have built a fully automated static Deployment Wizard.
 
----
-
-## 🏗 Architecture
-
-1. **Telegram Webhook (`webhookHandler.ts`)**  
-   Receives instant commands from the user (e.g., `/start`, `/add_email`). Handles the multi-step conversation state to securely store the user's Gmail App Password in Supabase Vault.
-2. **Cron Trigger (`emailPoller.ts`)**  
-   Runs every 5 minutes via `pg_cron`. Connects to your email via IMAP, fetches unread text bodies, and passes them to the AI.
-3. **AI Engine (`aiService.ts`)**  
-   Prompts Groq Llama 3 to classify the email (`IMPORTANT` vs `ROUTINE`). If important, returns a strict 3-bullet JSON summary.
-4. **Delivery (`telegram.ts`)**  
-   Pushes the AI summary to the user's Telegram chat along with interactive Inline Keyboard Buttons.
+1. Go to the live deployment portal: [**https://rahul-pamula.github.io/Email_to_telebot/**](https://rahul-pamula.github.io/Email_to_telebot/)
+2. Follow the 3-step wizard.
+3. Provide your **Supabase Management Token**, **Groq API Key**, and **Telegram Bot Token**.
+4. The wizard will automatically provision your database tables, upload your secrets to Vault, and deploy the Deno Edge Functions directly to your cloud.
 
 ---
 
-## 🚀 Quick Start & Deployment
+## 💻 Tech Stack
+### Backend (Runs in your Supabase)
+* **Deno Edge Functions:** Serverless functions that handle incoming Telegram webhooks.
+* **pg_cron:** Postgres extension used to poll your inbox every 5 minutes in the background.
+* **pg_net:** Postgres extension used to trigger the edge functions asynchronously.
+* **Supabase Vault:** Securely stores your IMAP passwords and API keys using pgsodium encryption.
 
-Want to deploy your own instance for free? We have prepared a step-by-step deployment guide.
-
-👉 **[Read the Deployment Guide](./Docs/DEPLOYMENT.md)**
+### Frontend (Static BYOC Portal)
+* **Vite & React TS:** Blazing fast static site generation.
+* **Three.js & React Three Fiber:** Interactive 3D graphics (the floating envelope).
+* **Framer Motion:** Smooth glassmorphic UI transitions.
+* **GitHub Pages:** CI/CD via GitHub Actions for 100% free static hosting.
 
 ---
 
-## 🔒 Privacy & Security
+## 🖥️ Local Development
 
-- Your email App Password is **never** stored in plain text. It is encrypted via `pgcrypto` inside **Supabase Vault** and decrypted only in memory during the IMAP fetch.
-- Emails are **not stored** in the database. The system only stores the `message_id`, sender, and subject to prevent duplicate notifications.
-- The Edge Function enforces strict RLS (Row Level Security) fallback policies, though it operates internally via the Service Role Key.
+If you want to contribute to the beautiful 3D landing page:
+
+```bash
+# Clone the repository
+git clone https://github.com/Rahul-pamula/Email_to_telebot.git
+
+# Go to the web folder
+cd Email_to_telebot/web
+
+# Install dependencies
+npm install
+
+# Start the Vite development server
+npm run dev
+```
+
+Visit `http://localhost:5173` to view the 3D BYOC Wizard in your browser.
 
 ---
 
-_Built with ❤️ for a cleaner inbox._
+## 🛡️ Privacy & Security
+This project is fully open source. The deployment web-app communicates strictly with the official `api.supabase.com` endpoints. Open your browser's Network tab to verify that no data is ever sent to a third-party analytics or tracking server.
