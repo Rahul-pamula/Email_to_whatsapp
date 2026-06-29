@@ -208,7 +208,18 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.6;
 }
 
-/* Responsive Grids */
+/* Responsive Grids & Layout */
+.nav-bar {
+  padding: 24px;
+}
+
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 100px;
+}
+
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -230,6 +241,18 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mobile Media Queries */
 @media (max-width: 992px) {
+  .nav-text {
+    display: none;
+  }
+  .nav-btn {
+    padding: 8px 12px !important;
+  }
+  .nav-bar {
+    padding: 16px !important;
+  }
+  .hero-section {
+    padding-top: 140px;
+  }
   .hero-grid {
     grid-template-columns: 1fr;
     text-align: center;

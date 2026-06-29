@@ -10,15 +10,15 @@ function App() {
   return (
     <div>
       {/* Navigation */}
-      <nav className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(16px)', borderBottom: '1px solid var(--border-glass)' }}>
+      <nav className="container nav-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(16px)', borderBottom: '1px solid var(--border-glass)' }}>
         <h1 className="signature-logo" style={{ margin: 0 }}>Email_To_Telebot</h1>
-        <a href="https://github.com/Rahul-pamula/Email_to_telebot" target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>
-          <Code size={16} /> View Source
+        <a href="https://github.com/Rahul-pamula/Email_to_telebot" target="_blank" rel="noreferrer" className="btn btn-secondary nav-btn" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>
+          <Code size={16} /> <span className="nav-text">View Source</span>
         </a>
       </nav>
 
       {/* Hero Section */}
-      <section className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '100px' }}>
+      <section className="container hero-section">
         <div className="hero-grid">
           <div className="hero-text">
             <div style={{ display: 'inline-block', padding: '6px 12px', background: 'var(--primary-glow)', color: 'var(--primary-supa)', borderRadius: '20px', fontWeight: 600, fontSize: '0.85rem', marginBottom: '16px' }}>
