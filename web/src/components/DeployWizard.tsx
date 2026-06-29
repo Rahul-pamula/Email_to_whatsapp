@@ -49,15 +49,15 @@ export function DeployWizard() {
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '40px', maxWidth: '600px', margin: '0 auto', minHeight: '450px', position: 'relative' }}>
+    <div className="bento-box" style={{ padding: '40px', maxWidth: '600px', margin: '0 auto', minHeight: '450px', position: 'relative', textAlign: 'left' }}>
       
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '32px' }}>
         {[1, 2, 3].map(i => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', opacity: step >= i ? 1 : 0.4, transition: 'opacity 0.3s' }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: step >= i ? 'var(--primary-supa)' : 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: step >= i ? '#000' : '#fff' }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: step >= i ? 'var(--primary-supa)' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: step >= i ? '#fff' : 'var(--text-muted)' }}>
               {i}
             </div>
-            {i < 3 && <div style={{ height: 2, width: 80, background: step > i ? 'var(--primary-supa)' : 'rgba(255,255,255,0.1)', margin: '0 16px' }} />}
+            {i < 3 && <div style={{ height: 2, width: 80, background: step > i ? 'var(--primary-supa)' : '#e2e8f0', margin: '0 16px' }} />}
           </div>
         ))}
       </div>
