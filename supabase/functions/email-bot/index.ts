@@ -15,7 +15,7 @@
 //             Identified by the `x-cron-trigger` header.
 //
 // ============================================================================
-/// <reference types="https://esm.sh/@supabase/functions-js/edge-runtime.d.ts" />
+
 
 import { createClient } from "@supabase/supabase-js";
 import { config } from "./config.ts";

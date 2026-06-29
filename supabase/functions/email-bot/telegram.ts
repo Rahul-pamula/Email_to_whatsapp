@@ -2,7 +2,7 @@
 // telegram.ts — Telegram Bot API Wrapper
 // Phase 6
 // ============================================================================
-/// <reference types="https://esm.sh/@supabase/functions-js/edge-runtime.d.ts" />
+
 
 import { config } from "./config.ts";
 
@@ -32,13 +32,29 @@ async function callTelegramApi(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Sends a plain text message (Markdown supported).
+ * Sends a plain text message (HTML supported).
  */
 export async function sendMessage(chatId: number, text: string): Promise<void> {
   await callTelegramApi("sendMessage", {
     chat_id: chatId,
     text,
-    parse_mode: "Markdown",
+    parse_mode: "HTML",
+  });
+}
+
+/**
+ * Sends a message with an inline keyboard menu.
+ */
+export async function sendInteractiveMenu(
+  chatId: number,
+  text: string,
+  inlineKeyboard: any
+): Promise<void> {
+  await callTelegramApi("sendMessage", {
+    chat_id: chatId,
+    text,
+    parse_mode: "HTML",
+    reply_markup: { inline_keyboard: inlineKeyboard },
   });
 }
 
@@ -60,16 +76,14 @@ export async function sendSummary(
 ): Promise<void> {
   const senderEmail = extractEmail(from);
 
-  // Telegram Markdown: * = bold, _ = italic, ` = code
   const text =
-    `📧 *New Important Email*\n` +
-    `*From:* ${escapeMarkdown(from)}\n` +
-    `*Account:* ${escapeMarkdown(emailAddress)}\n` +
-    `*Subject:* ${escapeMarkdown(subject)}\n\n` +
-    `${summary}`;
+    `📧 <b>New Important Email</b>\n` +
+    `<b>From:</b> ${escapeHtml(from)}\n` +
+    `<b>Account:</b> ${escapeHtml(emailAddress)}\n` +
+    `<b>Subject:</b> ${escapeHtml(subject)}\n\n` +
+    `${escapeHtml(summary)}`; // The AI summary itself shouldn't have HTML, so we escape it just in case. Wait, if we want emojis to show, escapeHtml doesn't touch emojis.
 
   // Shorten message_id for callback_data (Telegram has a 64-byte limit)
-  // We encode it as a Base64 short hash to keep within limits
   const shortId = btoa(messageId).substring(0, 20).replace(/[+=\/]/g, "");
 
   const inlineKeyboard = {
@@ -87,7 +101,7 @@ export async function sendSummary(
   await callTelegramApi("sendMessage", {
     chat_id: chatId,
     text,
-    parse_mode: "Markdown",
+    parse_mode: "HTML",
     reply_markup: inlineKeyboard,
   });
 }
@@ -104,13 +118,13 @@ export async function sendDigest(
     return;
   }
 
-  let text = `📊 *Your Daily Digest* (${summaries.length} important email${summaries.length > 1 ? "s" : ""})\n\n`;
+  let text = `📊 <b>Your Daily Digest</b> (${summaries.length} important email${summaries.length > 1 ? "s" : ""})\n\n`;
 
   for (const [i, item] of summaries.entries()) {
     text +=
-      `*${i + 1}. ${escapeMarkdown(item.subject)}*\n` +
-      `_From: ${escapeMarkdown(item.from)}_\n` +
-      `${item.summary}\n\n`;
+      `<b>${i + 1}. ${escapeHtml(item.subject)}</b>\n` +
+      `<i>From: ${escapeHtml(item.from)}</i>\n` +
+      `${escapeHtml(item.summary)}\n\n`;
   }
 
   await sendMessage(chatId, text);
@@ -118,7 +132,6 @@ export async function sendDigest(
 
 /**
  * Acknowledges a Telegram inline button press (required by Telegram API).
- * Without this, the button shows a loading spinner indefinitely.
  */
 export async function answerCallbackQuery(
   callbackQueryId: string,
@@ -132,20 +145,26 @@ export async function answerCallbackQuery(
 }
 
 /**
- * Edits the text of an existing message (e.g., after a button is pressed,
- * update the message to show "Sender blocked ✅").
+ * Edits the text of an existing message.
  */
 export async function editMessageText(
   chatId: number,
   messageId: number,
-  newText: string
+  newText: string,
+  inlineKeyboard?: any
 ): Promise<void> {
-  await callTelegramApi("editMessageText", {
+  const payload: any = {
     chat_id: chatId,
     message_id: messageId,
     text: newText,
-    parse_mode: "Markdown",
-  });
+    parse_mode: "HTML",
+  };
+  
+  if (inlineKeyboard) {
+    payload.reply_markup = { inline_keyboard: inlineKeyboard };
+  }
+
+  await callTelegramApi("editMessageText", payload);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -158,7 +177,11 @@ function extractEmail(from: string): string {
   return match ? match[1] : from.trim();
 }
 
-/** Escapes Telegram Markdown special characters to prevent formatting errors */
-function escapeMarkdown(text: string): string {
-  return text.replace(/[_*[\]()~`>#+=|{}.!-]/g, "\\$&");
+/** Escapes HTML special characters for Telegram HTML parse_mode */
+export function escapeHtml(text: string): string {
+  if (!text) return "";
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }

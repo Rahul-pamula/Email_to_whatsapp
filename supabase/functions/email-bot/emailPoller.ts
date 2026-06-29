@@ -1,7 +1,7 @@
 // ============================================================================
 // emailPoller.ts — Cron-triggered email polling orchestrator
 // ============================================================================
-/// <reference types="https://esm.sh/@supabase/functions-js/edge-runtime.d.ts" />
+
 
 import { SupabaseClient } from "@supabase/supabase-js";
 import { EmailAccount, ParsedEmail } from "./types.ts";

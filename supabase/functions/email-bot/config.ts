@@ -1,7 +1,7 @@
 // ============================================================================
 // config.ts — Centralized configuration and environment variable validation
 // ============================================================================
-/// <reference types="https://esm.sh/@supabase/functions-js/edge-runtime.d.ts" />
+
 
 
 /**

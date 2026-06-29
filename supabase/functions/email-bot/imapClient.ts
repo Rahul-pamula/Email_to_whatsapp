@@ -11,13 +11,14 @@
 //  5. Limit the batch to config.email.batchSize (default: 5) per run.
 //
 // ============================================================================
-/// <reference types="https://esm.sh/@supabase/functions-js/edge-runtime.d.ts" />
+
 
 import { config } from "./config.ts";
 import { ParsedEmail } from "./types.ts";
 
 // npm: specifier is the Deno-native way to import Node.js-compatible packages.
 // ImapFlow uses Node's tls module which Deno supports via its Node compat layer.
+// @ts-ignore: imapflow does not provide types but it works in Deno natively
 import { ImapFlow } from "npm:imapflow@1";
 
 /**
@@ -85,8 +86,9 @@ export async function fetchUnseenEmails(
     })) {
       try {
         const from = message.envelope?.from?.[0];
+        // ImapFlow uses from.address for the email address
         const fromAddress = from
-          ? `${from.name || ""} <${from.mailbox}@${from.host}>`.trim()
+          ? `${from.name || ""} <${from.address || "unknown"}>`.trim()
           : "Unknown Sender";
 
         const subject = message.envelope?.subject || "(No Subject)";

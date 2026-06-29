@@ -2,7 +2,7 @@
 // aiService.ts — Groq AI Summarization & Importance Classification
 // Phase 5
 // ============================================================================
-/// <reference types="https://esm.sh/@supabase/functions-js/edge-runtime.d.ts" />
+
 
 import { config } from "./config.ts";
 import { AiResult } from "./types.ts";
@@ -19,13 +19,15 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const SYSTEM_PROMPT = `You are an intelligent email assistant. Your job is to classify emails and summarize them.
 
 STEP 1 — CLASSIFY the email as one of:
-- "IMPORTANT": Requires attention or action (e.g., work tasks, deadlines, financial, personal matters, job offers, security alerts).
-- "ROUTINE": Can be safely ignored (e.g., newsletters, promotions, automated reports, social media notifications, OTP codes already used).
+- "IMPORTANT": Requires attention or action (e.g., work tasks, deadlines, financial, personal matters from real people, job offers).
+- "ROUTINE": MUST be ignored (e.g., Google Security alerts, new device logins, newsletters, promotions, automated reports, social media notifications, OTP codes).
+
+IF THE EMAIL IS A "Google Security Alert" OR "Your verification is past due" OR SIMILAR AUTOMATED PLATFORM ALERT, YOU MUST CLASSIFY IT AS "ROUTINE".
 
 STEP 2 — If "IMPORTANT", write exactly 3 short bullet points summarizing the key information.
 Each bullet must be under 100 characters and start with an emoji that matches the tone.
 
-RESPOND ONLY with valid JSON in this exact format (no extra text):
+RESPOND ONLY with valid JSON in this exact format (no extra text, no markdown backticks):
 {
   "classification": "IMPORTANT" | "ROUTINE",
   "summary": ["• bullet 1", "• bullet 2", "• bullet 3"] | null
@@ -34,11 +36,6 @@ RESPOND ONLY with valid JSON in this exact format (no extra text):
 /**
  * Sends an email to Groq's Llama 3 model for importance classification
  * and summarization.
- *
- * @param from     - Sender's name/email
- * @param subject  - Email subject line
- * @param body     - Plain text email body (already truncated by imapClient)
- * @returns        - AiResult with isImportant flag and optional summary
  */
 export async function analyzeEmail(
   from: string,
@@ -60,17 +57,15 @@ export async function analyzeEmail(
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
         ],
-        // Force Groq to return valid JSON — prevents hallucinated text wrappers
         response_format: { type: "json_object" },
-        temperature: 0.1, // Low temperature = more deterministic, consistent output
-        max_tokens: 300,  // Summaries are short — cap to save quota
+        temperature: 0.0, // Force completely deterministic output
+        max_tokens: 300,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[AI] Groq API error ${response.status}:`, errorText);
-      // On API error, default to treating email as important (fail safe)
       return { isImportant: true, summary: null };
     }
 
@@ -82,8 +77,9 @@ export async function analyzeEmail(
       return { isImportant: true, summary: null };
     }
 
-    // Parse the structured JSON response from Groq
-    const parsed = JSON.parse(content);
+    // Strip markdown JSON wrappers if the LLM hallucinates them despite response_format
+    const cleanContent = content.replace(/^```json\n?/m, "").replace(/\n?```$/m, "").trim();
+    const parsed = JSON.parse(cleanContent);
     const isImportant = parsed?.classification === "IMPORTANT";
     const bulletPoints: string[] | null = parsed?.summary ?? null;
 
