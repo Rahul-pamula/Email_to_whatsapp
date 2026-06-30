@@ -85,8 +85,8 @@ export function DeployWizard() {
               <strong style={{ color: 'var(--text)' }}>Quick Steps:</strong>
               <ol style={{ margin: '8px 0 0 20px', padding: 0, lineHeight: '1.6' }}>
                 <li>Sign in and create a new project at the <a href="https://supabase.com/dashboard/projects" target="_blank" rel="noreferrer" style={{color: 'var(--primary-supa)', fontWeight: 'bold'}}>Supabase Dashboard</a>.</li>
-                <li>Find your <b>Project URL</b> in <i>Project Settings &gt; API</i>.</li>
-                <li>Generate a <b>Management Token</b> in <i>Account &gt; Access Tokens</i>.</li>
+                <li>Find your <b>Project URL</b> in <a href="https://supabase.com/dashboard/project/_/settings/api" target="_blank" rel="noreferrer" style={{color: 'var(--primary-supa)'}}>Project Settings &gt; API</a>.</li>
+                <li>Generate a <b>Personal Access Token</b> in <a href="https://supabase.com/dashboard/account/tokens" target="_blank" rel="noreferrer" style={{color: 'var(--primary-supa)'}}>Account &gt; Access Tokens</a>.</li>
               </ol>
             </div>
             
@@ -101,7 +101,7 @@ export function DeployWizard() {
             </div>
 
             <div style={{ marginTop: 16 }}>
-              <label style={{ display: 'block', marginBottom: 8, fontSize: '0.95rem', fontWeight: 600 }}>Management Token</label>
+              <label style={{ display: 'block', marginBottom: 8, fontSize: '0.95rem', fontWeight: 600 }}>Personal Access Token</label>
               <input 
                 className="glass-input" 
                 type="password"
