@@ -83,10 +83,15 @@ function App() {
       {/* Visual Documentation Section */}
       <section style={{ padding: '120px 24px', background: '#ffffff', borderTop: '1px solid var(--border-glass)', borderBottom: '1px solid var(--border-glass)' }}>
         <div className="container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>How Browser Deployment Works</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '700px', margin: '0 auto 60px' }}>
-            You do not need to use GitHub or the terminal. Our secure browser script uses the official Supabase Management API to provision your backend automatically.
-          </p>
+          <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>What is "Bring Your Own Cloud"?</h2>
+          <div style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '800px', margin: '0 auto 60px', lineHeight: 1.8, textAlign: 'left' }}>
+            <p style={{ marginBottom: '16px' }}>
+              Normally, self-hosting requires cloning GitHub repositories, managing servers, and running complex terminal commands. We use a modern concept called <strong>Bring Your Own Cloud (BYOC)</strong>. We provide the user interface, but you provide the empty server.
+            </p>
+            <p>
+              When you enter your credentials below, our website acts like an <strong>invisible robot</strong>. It uses the official Supabase Management API to remotely create your database tables, upload your encrypted keys, and push the backend AI code directly to your servers. Once deployed, the code runs 100% privately on your infrastructure.
+            </p>
+          </div>
           
           <div className="doc-grid">
             <div className="bento-box" style={{ padding: '32px' }}>
