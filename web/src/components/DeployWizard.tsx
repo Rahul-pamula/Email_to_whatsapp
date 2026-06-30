@@ -125,13 +125,17 @@ export function DeployWizard() {
         {step === 3 && (
           <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
             <h2><Rocket style={{ verticalAlign: 'middle', marginRight: 8, color: 'var(--primary-tele)' }} /> AI & Bot Credentials</h2>
-            <p style={{ marginTop: 8, color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              These keys will be securely uploaded as encrypted secrets to your Supabase Vault.
-            </p>
+            
+            <div style={{ marginTop: 16, padding: '16px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '8px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+              <strong style={{ color: 'var(--text)' }}>Quick Steps:</strong>
+              <ol style={{ margin: '8px 0 0 20px', padding: 0, lineHeight: '1.6' }}>
+                <li>Get a free AI key at <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" style={{color: 'var(--primary-tele)', fontWeight: 'bold'}}>console.groq.com</a>.<br/><span style={{fontSize: '0.8rem', opacity: 0.8}}>Example: <code>gsk_A1b2...</code></span></li>
+                <li>Create a Telegram bot by messaging <a href="https://t.me/BotFather" target="_blank" rel="noreferrer" style={{color: 'var(--primary-tele)', fontWeight: 'bold'}}>@BotFather</a>.<br/><span style={{fontSize: '0.8rem', opacity: 0.8}}>Example: <code>123456:ABC-DEF...</code></span></li>
+              </ol>
+            </div>
             
             <div style={{ marginTop: 24 }}>
-              <label style={{ display: 'block', marginBottom: 4, fontSize: '0.9rem', fontWeight: 600 }}>Groq API Key (AI)</label>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8 }}>Get your free key at <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" style={{color: 'var(--primary-tele)'}}>console.groq.com</a> (e.g. <code>gsk_A1b2...</code>)</p>
+              <label style={{ display: 'block', marginBottom: 8, fontSize: '0.95rem', fontWeight: 600 }}>Groq API Key (AI)</label>
               <input 
                 className="glass-input" 
                 type="password"
@@ -142,8 +146,7 @@ export function DeployWizard() {
             </div>
 
             <div style={{ marginTop: 16 }}>
-              <label style={{ display: 'block', marginBottom: 4, fontSize: '0.9rem', fontWeight: 600 }}>Telegram Bot Token</label>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8 }}>Create a bot with <a href="https://t.me/BotFather" target="_blank" rel="noreferrer" style={{color: 'var(--primary-tele)'}}>@BotFather</a> on Telegram (e.g. <code>123456:ABC-DEF...</code>)</p>
+              <label style={{ display: 'block', marginBottom: 8, fontSize: '0.95rem', fontWeight: 600 }}>Telegram Bot Token</label>
               <input 
                 className="glass-input" 
                 type="password"
