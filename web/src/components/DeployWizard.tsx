@@ -44,9 +44,14 @@ export function DeployWizard() {
       'Content-Type': 'application/json'
     };
 
+    // Note: Due to strict CORS policies on api.supabase.com, we must route Management API requests
+    // through our custom Cloudflare Worker proxy.
+    // Replace this URL with your deployed Cloudflare Worker URL.
+    const SUPABASE_API_BASE = 'https://supabase-management-proxy.rahul-pamula.workers.dev';
+
     try {
-      addLog("Authenticating with Supabase Management API...", "info");
-      const projRes = await fetch('https://api.supabase.com/v1/projects', { headers: authHeaders });
+      addLog("Authenticating with Supabase Management API via Proxy...", "info");
+      const projRes = await fetch(`${SUPABASE_API_BASE}/v1/projects`, { headers: authHeaders });
       if (!projRes.ok) throw new Error("Authentication failed. Check your token.");
       addLog("Authentication successful.", "success");
       
@@ -55,7 +60,7 @@ export function DeployWizard() {
       const sql2 = (await import('../../../supabase/migrations/20260629173835_enable_pg_net.sql?raw')).default;
       const combinedSql = `${sql1}\n${sql2}`;
       
-      const sqlRes = await fetch(`https://api.supabase.com/v1/projects/${projectRef}/database/query`, {
+      const sqlRes = await fetch(`${SUPABASE_API_BASE}/v1/projects/${projectRef}/database/query`, {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ query: combinedSql })
@@ -69,7 +74,7 @@ export function DeployWizard() {
       
       addLog("Uploading secrets securely...", "info");
       const webhookSecret = crypto.randomUUID().replace(/-/g, '');
-      const secretRes = await fetch(`https://api.supabase.com/v1/projects/${projectRef}/secrets`, {
+      const secretRes = await fetch(`${SUPABASE_API_BASE}/v1/projects/${projectRef}/secrets`, {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify([
@@ -93,7 +98,7 @@ export function DeployWizard() {
       formData.append("metadata", JSON.stringify({ entrypoint_path: "index.ts", name: "email-bot" }));
       formData.append("file", bundleBlob, "index.ts");
 
-      const deployRes = await fetch(`https://api.supabase.com/v1/projects/${projectRef}/functions/deploy?slug=email-bot`, {
+      const deployRes = await fetch(`${SUPABASE_API_BASE}/v1/projects/${projectRef}/functions/deploy?slug=email-bot`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${keys.supabaseToken}`

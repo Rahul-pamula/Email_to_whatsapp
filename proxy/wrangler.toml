@@ -1,0 +1,7 @@
+name = "supabase-management-proxy"
+main = "worker.js"
+compatibility_date = "2023-10-16"
+
+# You can deploy this using the Wrangler CLI:
+# npm install -g wrangler
+# wrangler deploy
