@@ -294,11 +294,13 @@ export function DeployWizard() {
               <p style={{ marginTop: 16, color: 'var(--text-muted)' }}>
                 Your private email assistant is now running on your personal Supabase instance.
               </p>
-              <p style={{ marginTop: 24 }}>
-                <a href="https://t.me/" target="_blank" rel="noreferrer" style={{ color: 'var(--primary-tele)', textDecoration: 'none', fontWeight: 'bold' }}>
-                  Open Telegram to begin →
-                </a>
-              </p>
+              
+              <div style={{ marginTop: 32, padding: '16px', background: 'rgba(36, 161, 222, 0.1)', borderRadius: '12px', border: '1px solid rgba(36, 161, 222, 0.2)' }}>
+                <p style={{ margin: 0, fontWeight: 'bold', color: 'var(--primary-tele)' }}>📱 Next Step:</p>
+                <p style={{ margin: '8px 0 0 0', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                  Open Telegram and <strong>search for your bot's name</strong> in the search bar, then click the Start button to begin!
+                </p>
+              </div>
             </div>
           </motion.div>
         )}
