@@ -62,7 +62,8 @@ export function DeployWizard() {
       const sql1 = (await import('../../../supabase/migrations/20260629163821_initial_schema.sql?raw')).default;
       const sql2 = (await import('../../../supabase/migrations/20260629173835_enable_pg_net.sql?raw')).default;
       const sql3 = (await import('../../../supabase/migrations/20260702000000_admin_approval.sql?raw')).default;
-      const combinedSql = `${sql1}\n${sql2}\n${sql3}`;
+      const sql4 = (await import('../../../supabase/migrations/20260702000001_cleanup_cron.sql?raw')).default;
+      const combinedSql = `${sql1}\n${sql2}\n${sql3}\n${sql4}`;
       
       const sqlRes = await fetch(`${SUPABASE_API_BASE}/v1/projects/${projectRef}/database/query`, {
         method: 'POST',
